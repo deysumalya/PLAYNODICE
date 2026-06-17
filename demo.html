@@ -285,7 +285,7 @@
                 </div>
             </div>
             <div class="video-container">
-                <video src="./static/ADDD.mp4" autoplay loop muted controls></video>
+                <video id="autopsy-video" src="./static/ADDD.mp4" autoplay loop muted controls></video>
             </div>
         </div>
     </div>
@@ -529,6 +529,11 @@
         document.getElementById('step-autopsy').classList.add('hidden');
         document.getElementById('step-autofix').classList.add('hidden');
         document.getElementById('step-download').classList.add('hidden');
+        
+        const autopsyVideo = document.getElementById('autopsy-video');
+        if (autopsyVideo) {
+            autopsyVideo.pause();
+        }
     }
 
     function startDemo() {
