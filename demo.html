@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEMO - UI/UX BRUTALISM</title>
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --text: #000000;
+            --border: 4px solid #000000;
+            --primary: #0000FF;
+            --accent: #FF0000;
+            --highlight: #FFFF00;
+            --font: "Courier New", Courier, monospace, system-ui;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            line-height: 1.5;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        strong, b {
+            font-weight: 900;
+        }
+
+        h1, h2, h3 {
+            margin: 0 0 10px 0;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            border-bottom: var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 40px;
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            border: var(--border);
+            padding: 20px;
+            background: var(--bg);
+            box-shadow: 10px 10px 0px 0px var(--text);
+            position: relative;
+        }
+
+        .panel.hidden {
+            display: none;
+        }
+
+        .upload-area {
+            border: 4px dashed var(--text);
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            background: var(--highlight);
+            transition: none;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            background: var(--text);
+            color: var(--highlight);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--bg);
+            border: var(--border);
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-family: var(--font);
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: var(--text);
+            color: var(--primary);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background: var(--text);
+            color: var(--accent);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .terminal {
+            background: var(--text);
+            color: #00FF00;
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            border: var(--border);
+            margin-top: 20px;
+            text-transform: none;
+        }
+
+        .terminal p {
+            margin: 5px 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: var(--text);
+            color: var(--bg);
+            padding: 5px 10px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .autopsy-data {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 2px solid var(--text);
+            background: #EEEEEE;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .video-container {
+            width: 100%;
+            border: var(--border);
+            background: var(--text);
+            aspect-ratio: 9/16;
+            max-height: 600px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container video {
+            height: 100%;
+            width: auto;
+            max-width: 100%;
+        }
+
+        .metric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .metric-table th, .metric-table td {
+            border: 2px solid var(--text);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .metric-table th {
+            background: var(--text);
+            color: white;
+        }
+
+        .winner-bg { background: #CCFFCC; }
+        .loser-bg { background: #FFCCCC; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .btn { width: 100%; box-sizing: border-box; margin-bottom: 10px; margin-right: 0; font-size: 1.2rem; text-align: center; }
+            .metric-table th, .metric-table td { padding: 5px; font-size: 0.8rem; }
+            .metric-table { display: block; overflow-x: auto; }
+            #how-it-works-modal > div { margin: 10px; padding: 20px; width: auto; }
+            #how-it-works-modal h2 { font-size: 1.8rem; }
+            #how-it-works-modal button { position: static !important; display: block; width: 100%; margin-bottom: 20px; }
+            div[style*="font-size: 1.5rem"] { font-size: 1.2rem !important; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AD SURGERY - AUTOFIX DEMO</h1>
+
+    <!-- STEP 1: UPLOAD -->
+    <div id="step-upload" class="panel">
+        <div class="status-badge">STEP 1: INPUT</div>
+        <h2>DRAG AD HERE OR CLICK TO UPLOAD</h2>
+        <div class="upload-area" onclick="startDemo()">
+            <h3 id="upload-text">+ SELECT VIDEO FILE (ADDD.MP4)</h3>
+        </div>
+        <p>No login required. We will surgically analyze your ad and reconstruct it for maximum retention.</p>
+    </div>
+
+    <!-- STEP 2: AUTOPSY (Hidden initially) -->
+    <div id="step-autopsy" class="panel hidden">
+        <div class="status-badge" style="background: var(--accent);">STEP 2: AUTOPSY RESULTS</div>
+        <h2>GLOBAL DIAGNOSIS: <span style="background: var(--highlight); color: var(--text); padding: 0 10px;">LOSER (27.4% WIN)</span></h2>
+        
+        <div class="grid-2">
+            <div>
+                <h3>EXTRACTED METRICS (41 DATA POINTS)</h3>
+                <div style="max-height: 300px; overflow-y: auto; border: 2px solid var(--text); padding: 10px; background: #EEEEEE;">
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>CONFIDENCE:</strong> 27.4% WINNER</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>DURATION:</strong> 33.31s</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>BITRATE:</strong> 2972 kbps</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>RESOLUTION:</strong> 720x1280</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>ASPECT RATIO:</strong> 9:16</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>HOOK CUT DENSITY:</strong> 0</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>OVERALL CUT DENSITY:</strong> 0.42</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>CONTEXT RESETS:</strong> 10.80</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>OPTICAL FLOW VAR:</strong> 42.1</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>OPTICAL FLOW MEDIAN:</strong> 12.4</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>1ST FRAME CONTRAST:</strong> 85</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>1ST FRAME SATURATION:</strong> 41</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>FRAME OCCUPANCY:</strong> 0.85</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>CONTRAST DELTA:</strong> 12</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>LUMINANCE DELTA:</strong> 8</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>LOUDNESS (LUFS):</strong> -18.53</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>TRANSIENT SPIKES:</strong> 37</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>SPEECH WPM:</strong> 5.61</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>VOCAL/MUSIC RATIO:</strong> 0.54</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>AUDIO TYPE:</strong> Lyrical Music</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>A/V ASYNCHRONY:</strong> 1.0</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>PROXEMIC URGENCY:</strong> 0.3</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>FACE IN HOOK:</strong> False</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>TEXT OVERLAY:</strong> 0.90</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>CTA DWELL TIME:</strong> 2.1s</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>OFFER CATEGORY:</strong> E-com</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>PRESENTER TYPE:</strong> Faceless</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>VIBE AESTHETIC:</strong> Aspirational</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>CAPTION STYLE:</strong> Minimalist</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>VFX COUNT:</strong> 2</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>FRAMEWORK:</strong> Other</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>HOOK ANGLE:</strong> Visual curiosity</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>1ST VISUAL PROOF:</strong> 4.5s</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>BRAND PLACEMENT:</strong> 28.0s</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>CTA TYPE:</strong> Soft</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>PAS MATCH:</strong> False</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>RESET RATE:</strong> 0.32</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>LANGUAGE MIX:</strong> EN/HI</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>CELEBRITY:</strong> False</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>PRICE ANCHOR:</strong> False</div>
+                    <div class="autopsy-data" style="padding: 5px; margin: 2px 0;"><strong>FESTIVAL CONTEXT:</strong> False</div>
+                </div>
+
+                <div style="border: 4px solid #9900FF; padding: 15px; background: #F9F0FF; margin-top: 20px; text-transform: none;">
+                    <h3 style="color: #9900FF; margin-top: 0; text-transform: uppercase;">⚡ GEMINI 3.1 ANALYSIS</h3>
+                    <p><strong>WHY THIS IS A LOSER:</strong> This ad completely lacks a "Hook Cut" in the critical first 3 seconds, meaning users scroll past before the premise is established. Furthermore, the scene chaos is far too high (10.8 context resets), creating visual cognitive overload. The "first visual proof" of the product also happens too late at 4.5s.</p>
+                    <p><strong>HOW IT CAN BECOME A WINNER:</strong> To salvage this creative, a human editor must inject a hard visual cut within the first 2 seconds to instantly reset user attention. The pacing must be slowed down to reduce the context reset rate below 8.0, and the first visual proof needs to be front-loaded to the 1.5s mark. This will theoretically boost the win probability by +15-20%.</p>
+                </div>
+                
+                <div style="margin-top: 40px; text-align: center;">
+                    <button class="btn btn-accent" onclick="startAutofix()">INITIATE AUTO-FIX >></button>
+                </div>
+            </div>
+            <div class="video-container">
+                <video src="./static/ADDD.mp4" autoplay loop muted controls></video>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: AUTOFIX THINKING (Hidden initially) -->
+    <div id="step-autofix" class="panel hidden">
+        <div class="status-badge" style="background: var(--primary);">STEP 3: NEURAL AUTO-FIX</div>
+        <h2>GEMINI 3.1 & OMNI FLASH ARE EDITING...</h2>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">
+                ESTIMATED TIME: <span id="countdown">600</span>s
+            </div>
+            <div>
+                <button class="btn" style="background: var(--text); color: var(--bg); margin-right: 10px;" onclick="skipDemo()">SKIP (DEMO) >></button>
+                <button class="btn btn-accent" onclick="document.getElementById('how-it-works-modal').style.display='block'">HOW IT WORKS</button>
+            </div>
+        </div>
+        
+        <div class="terminal" id="terminal-output">
+            <p>> System initialized...</p>
+        </div>
+    </div>
+
+    <!-- STEP 4: DOWNLOAD & A/B TEST RESULT (Hidden initially) -->
+    <div id="step-download" class="panel hidden">
+        <div class="status-badge" style="background: #00AA00;">STEP 4: A/B TESTING SURGERY COMPLETE</div>
+        <h2>YOUR AD HAS BEEN RECONSTRUCTED AND TESTED</h2>
+        
+        <div class="grid-2" style="margin-top: 30px;">
+            <!-- Original Ad Column -->
+            <div style="border: 4px solid var(--accent); padding: 15px; background: #FFF0F0;">
+                <h3 style="color: var(--accent); text-align: center;">VARIANT A: ORIGINAL</h3>
+                <div class="video-container" style="border-color: var(--accent); max-height: 400px;">
+                    <video src="./static/ADDD.mp4" autoplay loop muted controls></video>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <h2 style="color: var(--accent); margin:0;">27.4% WINNER</h2>
+                    <p style="font-weight:bold; margin-top:5px;">STATUS: LOSER</p>
+                </div>
+            </div>
+            
+            <!-- Edited Ad Column -->
+            <div style="border: 4px solid #00AA00; padding: 15px; background: #F0FFF0;">
+                <h3 style="color: #00AA00; text-align: center;">VARIANT B: EDITED (OMNI FLASH)</h3>
+                <div class="video-container" style="border-color: #00AA00; max-height: 400px;">
+                    <video src="./static/merged_ad.mp4" autoplay loop muted controls></video>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <h2 style="color: #00AA00; margin:0;">46.2% WINNER</h2>
+                    <p style="font-weight:bold; margin-top:5px;">STATUS: IMPROVED (+18.8%)</p>
+                    <div style="margin-top: 15px; padding: 10px; background-color: #FFFFCC; border: 2px dashed #FF9900; color: #000; font-size: 0.9rem; text-align: left; text-transform: none;">
+                        <strong>⚠️ PROTOTYPE WARNING:</strong> This AI-generated video is a structural storyboard. It may contain visual artifacts, desyncs, or hallucinations. It is provided strictly as a blueprint to show your human editors exactly <em>how</em> to cut the original ad to achieve this higher retention score.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 40px;">WHY THE SCORE JUMPED: STRUCTURAL COMPARISON</h3>
+        <table class="metric-table" style="font-size: 0.95rem;">
+            <thead>
+                <tr>
+                    <th>METRIC DEFINITION</th>
+                    <th>VARIANT A (ORIGINAL)</th>
+                    <th>VARIANT B (EDITED)</th>
+                    <th>IMPACT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background: var(--text); color: var(--bg); font-weight: bold;"><td colspan="4">A. COMPUTER VISION & PIXEL MATH</td></tr>
+                <tr>
+                    <td><strong>HOOK CUT DENSITY</strong><br>Number of hard cuts in the critical first 3 seconds.</td>
+                    <td class="loser-bg">0</td>
+                    <td class="winner-bg">1</td>
+                    <td>Added cut in first 3s retains attention.</td>
+                </tr>
+                <tr>
+                    <td><strong>CONTEXT RESETS</strong><br>How frequently the entire scene completely changes.</td>
+                    <td class="loser-bg">10.80</td>
+                    <td class="winner-bg">7.20</td>
+                    <td>Reduced scene chaos makes it easier to watch.</td>
+                </tr>
+                <tr>
+                    <td><strong>OVERALL CUT DENSITY</strong><br>Pacing of the ad across its total duration.</td>
+                    <td class="loser-bg">0.42</td>
+                    <td class="winner-bg">0.33</td>
+                    <td>Pacing slowed down slightly.</td>
+                </tr>
+                <tr>
+                    <td><strong>ASPECT RATIO</strong><br>The dimension proportions of the video.</td>
+                    <td>9:16</td>
+                    <td>9:16</td>
+                    <td>Standard mobile format.</td>
+                </tr>
+                <tr>
+                    <td><strong>RESOLUTION</strong><br>Exact pixel dimensions.</td>
+                    <td>720x1280</td>
+                    <td>720x1280</td>
+                    <td>Vertical HD maintained.</td>
+                </tr>
+                <tr>
+                    <td><strong>BITRATE (KBPS)</strong><br>Video compression level and quality.</td>
+                    <td>2972</td>
+                    <td>2259</td>
+                    <td>Higher compression on edited file.</td>
+                </tr>
+                <tr>
+                    <td><strong>FPS</strong><br>Frames per second.</td>
+                    <td>25.0</td>
+                    <td>24.0</td>
+                    <td>Slight framerate drop.</td>
+                </tr>
+                <tr>
+                    <td><strong>VIDEO DURATION</strong><br>Total length of the ad in seconds.</td>
+                    <td>33.31s</td>
+                    <td>33.31s</td>
+                    <td>Identical length.</td>
+                </tr>
+
+                <tr style="background: var(--text); color: var(--bg); font-weight: bold;"><td colspan="4">B. AUDIO SIGNAL PROCESSING</td></tr>
+                <tr>
+                    <td><strong>AUDIO LOUDNESS (LUFS)</strong><br>Total perceived loudness relative to broadcast standards.</td>
+                    <td>-18.53</td>
+                    <td>-18.53</td>
+                    <td>Original audio perfectly remuxed.</td>
+                </tr>
+                <tr>
+                    <td><strong>AUDIO TRANSIENT SPIKES</strong><br>Sudden loud impacts (beats, sound effects, claps).</td>
+                    <td>37</td>
+                    <td>37</td>
+                    <td>Original audio perfectly remuxed.</td>
+                </tr>
+                <tr>
+                    <td><strong>SPEECH WPM</strong><br>The speed of the speaker's delivery.</td>
+                    <td>5.61</td>
+                    <td>5.61</td>
+                    <td>Original audio perfectly remuxed.</td>
+                </tr>
+                <tr>
+                    <td><strong>VOCAL-TO-MUSIC RATIO</strong><br>Ensures voice isn't drowned by background track.</td>
+                    <td>0.54</td>
+                    <td>0.54</td>
+                    <td>Original audio perfectly remuxed.</td>
+                </tr>
+                <tr>
+                    <td><strong>AUDIO TYPE</strong><br>Primary acoustic classification.</td>
+                    <td>Lyrical Music Track</td>
+                    <td>Lyrical Music Track</td>
+                    <td>Original audio perfectly remuxed.</td>
+                </tr>
+                <tr>
+                    <td><strong>AUDIO/VISUAL ASYNCHRONY</strong><br>Disconnection between visual cuts and audio beats.</td>
+                    <td>1.0</td>
+                    <td>1.0</td>
+                    <td>Both out of sync visually.</td>
+                </tr>
+
+                <tr style="background: var(--text); color: var(--bg); font-weight: bold;"><td colspan="4">C. PSYCHOLOGICAL SEMANTICS</td></tr>
+                <tr>
+                    <td><strong>VIBE AESTHETIC</strong><br>Overall visual mood and grading.</td>
+                    <td>Aspirational lifestyle</td>
+                    <td>Aspirational lifestyle</td>
+                    <td>Aesthetic preserved by AI.</td>
+                </tr>
+                <tr>
+                    <td><strong>TEXT OVERLAY PRESENCE</strong><br>Proportion of frames containing text/graphics.</td>
+                    <td class="loser-bg">0.90</td>
+                    <td class="winner-bg">0.95</td>
+                    <td>Slightly more text visibility.</td>
+                </tr>
+                <tr>
+                    <td><strong>HOOK ANGLE</strong><br>Psychological opening trigger.</td>
+                    <td>Visual curiosity</td>
+                    <td>Visual curiosity</td>
+                    <td>Maintained unusual hook.</td>
+                </tr>
+                <tr>
+                    <td><strong>SCRIPT FRAMEWORK</strong><br>Direct-response framework used.</td>
+                    <td>Other</td>
+                    <td>Other</td>
+                    <td>No script changes.</td>
+                </tr>
+                <tr>
+                    <td><strong>PRESENTER TYPE</strong><br>Determines the trust factor of the speaker.</td>
+                    <td>Faceless B-roll</td>
+                    <td>Faceless B-roll</td>
+                    <td>Maintained faceless style.</td>
+                </tr>
+                <tr>
+                    <td><strong>OFFER CATEGORY</strong><br>Business vertical classification.</td>
+                    <td>Physical E-com</td>
+                    <td>Physical E-com</td>
+                    <td>Maintained e-com.</td>
+                </tr>
+                <tr>
+                    <td><strong>CAPTION STYLE</strong><br>Typography used for subtitles.</td>
+                    <td>Minimalist white subtitles</td>
+                    <td>Minimalist white subtitles</td>
+                    <td>Style maintained.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 40px; text-align: center;">
+            <a href="./static/merged_ad.mp4" download class="btn">DOWNLOAD MERGED_AD.MP4</a>
+        </div>
+    </div>
+
+</div>
+
+<!-- HOW IT WORKS MODAL -->
+<div id="how-it-works-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; overflow-y:auto; padding: 20px; box-sizing: border-box;">
+    <div style="background: var(--bg); max-width: 900px; margin: 40px auto; border: var(--border); padding: 40px; position:relative; color: var(--text);">
+        <button style="position:absolute; top:20px; right:20px; background:var(--text); color:var(--bg); border:none; padding:10px 15px; font-weight:bold; cursor:pointer;" onclick="document.getElementById('how-it-works-modal').style.display='none'">CLOSE [X]</button>
+        
+        <h2 style="color: var(--accent); font-size: 2.5rem; margin-top:0; border-bottom: 4px solid var(--accent); padding-bottom: 10px;">HOW WE AUTOMATED THE EDITOR</h2>
+        
+        <h3 style="color: var(--primary); font-size: 1.5rem; margin-top: 30px;">1. THE AUTOMATION PIPELINE</h3>
+        <p style="font-size: 1.1rem; line-height: 1.6;">We built a multi-agent orchestration pipeline. First, we feed the 41 extracted backend metrics (OpenCV, Librosa) and the original video to <strong>Gemini 3.1 Flash Lite</strong>. Gemini acts as the "Director," analyzing why the video is a mathematical loser (e.g., 0 hook cuts, too much scene chaos) and writing a precise blueprint for how to fix it.</p>
+        <p style="font-size: 1.1rem; line-height: 1.6;">Once the blueprint is generated, we trigger the <strong>Omni Flash API</strong> to perform the actual video generation based strictly on Gemini's framing instructions.</p>
+        
+        <h3 style="color: var(--primary); font-size: 1.5rem; margin-top: 30px;">2. THE CHALLENGES WE FACED</h3>
+        <ul style="font-size: 1.1rem; line-height: 1.6;">
+            <li style="margin-bottom: 10px;"><strong>AI Hallucinations:</strong> Generative video models often hallucinate completely new scenes, losing the original product context or the actor's exact likeness.</li>
+            <li style="margin-bottom: 10px;"><strong>Audio Destruction:</strong> Re-generating a video track completely destroys the lip-sync and audio pacing of the original ad, turning high-converting audio into garbage.</li>
+            <li style="margin-bottom: 10px;"><strong>Context Length Limitations:</strong> A 30-second ad is often too large to generate in a single reliable shot with high fidelity.</li>
+        </ul>
+
+        <h3 style="color: var(--primary); font-size: 1.5rem; margin-top: 30px;">3. THE ENGINEERING SOLUTIONS</h3>
+        <ul style="font-size: 1.1rem; line-height: 1.6;">
+            <li style="margin-bottom: 15px;"><strong>Video Segmentation Protocol:</strong> Instead of generating the whole video at once, we use FFmpeg to slice the original video into smaller chunks. We only ask Omni Flash to regenerate the <em>specific chunks</em> that need fixing (e.g., the first 3 seconds to add a hook cut), preserving the pristine original footage everywhere else.</li>
+            <li style="margin-bottom: 15px;"><strong>Audio Ripping & Remuxing:</strong> Before touching the video, the pipeline rips the original audio track entirely. After the AI reconstructs the visual chunks and merges them back together, we remux the pristine original audio back onto the final visual track. This perfectly preserves the speech WPM, LUFS, and music, completely bypassing AI audio distortion.</li>
+            <li style="margin-bottom: 15px;"><strong>Structural Storyboarding:</strong> We treat the AI output not as a final broadcast-ready ad, but as a "Structural Storyboard." It provides the exact mathematical pacing and cuts needed, acting as a flawless visual blueprint for human editors to easily mimic and deploy.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function hideAll() {
+        document.getElementById('step-upload').classList.add('hidden');
+        document.getElementById('step-autopsy').classList.add('hidden');
+        document.getElementById('step-autofix').classList.add('hidden');
+        document.getElementById('step-download').classList.add('hidden');
+    }
+
+    function startDemo() {
+        document.getElementById('upload-text').innerText = "UPLOADING AND ANALYZING...";
+        setTimeout(() => {
+            hideAll();
+            document.getElementById('step-autopsy').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }, 1500);
+    }
+
+    let countdownInterval;
+    let autofixTimeout;
+
+    function startAutofix() {
+        hideAll();
+        document.getElementById('step-autofix').classList.remove('hidden');
+        window.scrollTo(0, 0);
+
+        const terminal = document.getElementById('terminal-output');
+        terminal.innerHTML = '<p>> System initialized...</p>';
+        
+        let timeLeft = 600;
+        document.getElementById('countdown').innerText = timeLeft;
+        countdownInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('countdown').innerText = timeLeft;
+            if (timeLeft <= 0) {
+                skipDemo();
+            }
+        }, 1000);
+
+        const steps = [
+            "> [ANALYSIS] Ad flagged as LOSER (27.4% WIN) due to 0 Hook Cuts...",
+            "> [ACTION] Triggering Video Segmentation Protocol...",
+            "> [FFMPEG] Slicing video into 10-second chunks...",
+            "> [AI] Prompting Gemini 3.1 Flash Lite & Omni Flash...",
+            "> [AI] Adding visual cut at 00:02 to improve hook retention.",
+            "> [AI] Reducing scene chaos (Context Resets dropped from 10.8 to 7.2)...",
+            "> [AUDIO] Ripping original audio track to prevent AI voice desync...",
+            "> [FFMPEG] Merging newly generated chunks...",
+            "> [FFMPEG] Remuxing original audio back onto merged visual track...",
+            "> [VERIFICATION] Feeding to AutoGluon... 46.2% WINNER (+18.8% Boost).",
+            "> [SYSTEM] Encoding final output to merged_ad.mp4...",
+            "> [SYSTEM] Operation successful. Loading A/B Dashboard..."
+        ];
+
+        let i = 0;
+        function printStep() {
+            if (i < steps.length) {
+                const p = document.createElement('p');
+                p.innerText = steps[i];
+                terminal.appendChild(p);
+                terminal.scrollTop = terminal.scrollHeight;
+                i++;
+                // Print a step slowly over the 600 seconds
+                autofixTimeout = setTimeout(printStep, 35000 + Math.random() * 10000); 
+            }
+        }
+        autofixTimeout = setTimeout(printStep, 2000);
+    }
+
+    function skipDemo() {
+        clearInterval(countdownInterval);
+        clearTimeout(autofixTimeout);
+        hideAll();
+        document.getElementById('step-download').classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
+

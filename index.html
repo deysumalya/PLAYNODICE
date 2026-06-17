@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAYNODICE | Ad Autopsy & A/B Testing</title>
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --text: #000000;
+            --border: 3px solid #000000;
+            --primary: #0000FF;
+            --accent: #FF0000;
+            --highlight: #FFFF00;
+            --font: "Courier New", Courier, monospace, system-ui;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            line-height: 1.5;
+            text-transform: uppercase;
+            overflow-x: hidden;
+            font-weight: bold;
+            /* Background Grid Pattern */
+            background-image: 
+                linear-gradient(var(--text) 1px, transparent 1px),
+                linear-gradient(90deg, var(--text) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: -1px -1px;
+            background-attachment: fixed;
+        }
+        
+        strong, b {
+            font-weight: 900;
+        }
+
+        /* Marquee Ticker */
+        .marquee {
+            width: 100vw;
+            overflow: hidden;
+            background: var(--text);
+            color: var(--highlight);
+            padding: 8px 0;
+            border-bottom: var(--border);
+            white-space: nowrap;
+            position: relative;
+            z-index: 10;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+            font-weight: 900;
+            font-size: 1rem;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .content-wrapper {
+            background: var(--bg);
+            max-width: 1200px;
+            margin: 0 auto;
+            border-left: var(--border);
+            border-right: var(--border);
+            min-height: 100vh;
+        }
+
+        nav {
+            border-bottom: var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--highlight);
+        }
+
+        nav h1 {
+            margin: 0;
+            font-size: 2rem;
+            letter-spacing: -2px;
+            font-weight: 900;
+        }
+
+        .nav-links a {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--bg);
+            background: var(--text);
+            padding: 8px 15px;
+            text-decoration: none;
+            margin-left: 10px;
+            border: var(--border);
+            cursor: not-allowed;
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+
+        .nav-links a.active-demo {
+            cursor: pointer;
+            opacity: 1;
+            background: var(--primary);
+        }
+
+        .nav-links a.active-demo:hover {
+            background: var(--text);
+            color: var(--primary);
+            transform: translateY(-2px) rotate(-2deg);
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        h1, h2, h3 {
+            margin: 0 0 10px 0;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        /* Giant Hero Typography */
+        .hero {
+            padding: 60px 0;
+            border-bottom: var(--border);
+            text-align: left;
+            position: relative;
+        }
+
+        .hero-bg-text {
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.05;
+            top: -20px;
+            left: -20px;
+            z-index: 0;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            line-height: 0.85;
+            margin-bottom: 20px;
+            color: var(--primary);
+            word-wrap: break-word;
+            position: relative;
+            z-index: 2;
+            text-shadow: 4px 4px 0px var(--text);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            font-weight: bold;
+            background: var(--highlight);
+            display: inline-block;
+            padding: 8px 15px;
+            border: var(--border);
+            position: relative;
+            z-index: 2;
+            box-shadow: 4px 4px 0px 0px var(--text);
+        }
+
+        .btn-container {
+            margin-top: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn {
+            background: var(--text);
+            color: var(--bg);
+            border: var(--border);
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: var(--font);
+            font-weight: 900;
+            cursor: not-allowed;
+            display: inline-block;
+            text-decoration: none;
+            text-transform: uppercase;
+            box-shadow: 6px 6px 0px 0px var(--text);
+            margin-right: 15px;
+            opacity: 0.5;
+            transition: transform 0.1s;
+        }
+
+        .btn-active {
+            background: var(--accent);
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .btn-active:hover {
+            background: var(--highlight);
+            color: var(--text);
+            box-shadow: 8px 8px 0px 0px var(--text);
+            transform: translate(-3px, -3px);
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .panel {
+            border: var(--border);
+            padding: 25px;
+            background: var(--bg);
+            box-shadow: 10px 10px 0px 0px var(--text);
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .panel:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 13px 13px 0px 0px var(--text);
+        }
+
+        .panel-blue { background: var(--primary); color: var(--bg); }
+        .panel-yellow { background: var(--highlight); }
+        .panel-red { background: var(--accent); color: var(--bg); }
+
+        .tag {
+            background: var(--text);
+            color: var(--bg);
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 15px;
+            transform: rotate(-2deg);
+        }
+
+        .mini-result {
+            margin-top: 20px;
+            border: 3px dashed var(--text);
+            padding: 15px;
+            background: #EEEEEE;
+            color: var(--text);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .mini-result h4 {
+            margin: 0 0 10px 0;
+            border-bottom: 3px solid var(--text);
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .compare-box {
+            border: 3px solid var(--text);
+            padding: 10px;
+            font-weight: 900;
+            font-size: 1rem;
+        }
+
+        .compare-loser { background: #FFCCCC; }
+        .compare-winner { background: #CCFFCC; }
+
+        /* Huge Section Header */
+        .huge-header {
+            font-size: 3rem;
+            line-height: 0.9;
+            margin-top: 60px;
+            border-bottom: var(--border);
+            padding-bottom: 15px;
+            position: relative;
+        }
+        
+        .huge-header::before {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            border: var(--border);
+            left: -15px;
+            top: -15px;
+            z-index: 1;
+        }
+
+        /* Metrics Data Table */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .metric-card {
+            border: 2px solid var(--text);
+            padding: 12px;
+            background: white;
+            box-shadow: 4px 4px 0px 0px var(--text);
+        }
+
+        .metric-card h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .metric-card p {
+            font-size: 0.85rem;
+            margin: 5px 0;
+        }
+
+        .metric-card .how {
+            font-size: 0.75rem;
+            background: #EEEEEE;
+            padding: 5px;
+            margin-top: 8px;
+            border: 1px dashed var(--text);
+            font-weight: normal;
+            text-transform: none;
+            font-family: monospace;
+        }
+
+        .metrics-category {
+            font-size: 1.5rem;
+            background: var(--text);
+            color: var(--bg);
+            padding: 8px 15px;
+            display: inline-block;
+            margin-top: 40px;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            border-top: var(--border);
+            padding: 40px 30px;
+            text-align: center;
+            background: var(--text);
+            color: var(--highlight);
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-top: 60px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-bg-text { font-size: 3rem; top: 0; left: 0; }
+            .hero h1 { font-size: 2.5rem; text-shadow: 2px 2px 0px var(--text); }
+            nav { flex-direction: column; gap: 15px; text-align: center; }
+            .nav-links a { display: block; margin: 5px 0; }
+            .huge-header { font-size: 2.5rem !important; margin-top: 40px !important; }
+            h2[style*="font-size: 4rem"] { font-size: 2.2rem !important; }
+            .metrics-category { font-size: 1.2rem; }
+            .grid-layout, .compare-grid { grid-template-columns: 1fr; }
+            .btn { width: 100%; box-sizing: border-box; margin-bottom: 15px; margin-right: 0; text-align: center; }
+            .container { padding: 15px; }
+            .hero p { font-size: 1rem; }
+            div[style*="padding: 60px 40px"] { padding: 30px 20px !important; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="marquee">
+        <div class="marquee-content">
+            /// PLAYNODICE /// 41-POINT DATA AUTOPSY /// REAL-TIME A/B TESTING /// SURGICAL EDITING /// WE RIP, WE FIX, YOU PROFIT /// PLAYNODICE /// 41-POINT DATA AUTOPSY /// REAL-TIME A/B TESTING /// SURGICAL EDITING /// WE RIP, WE FIX, YOU PROFIT ///
+            /// PLAYNODICE /// 41-POINT DATA AUTOPSY /// REAL-TIME A/B TESTING /// SURGICAL EDITING /// WE RIP, WE FIX, YOU PROFIT /// PLAYNODICE /// 41-POINT DATA AUTOPSY /// REAL-TIME A/B TESTING /// SURGICAL EDITING /// WE RIP, WE FIX, YOU PROFIT ///
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <nav>
+            <h1>PLAYNODICE</h1>
+            <div class="nav-links">
+                <a href="./demo.html" class="active-demo">SEE DEMO</a>
+                <a href="#" onclick="return false;">ENTER APP (LOCKED)</a>
+            </div>
+        </nav>
+
+        <div class="container">
+            
+            <div class="hero">
+                <div class="hero-bg-text">AUTOPSY TEST FIX</div>
+                <h1>STOP GUESSING.<br>KNOW YOUR WINNERS.</h1>
+                <p>PLAYNODICE EMPOWERS AD AGENCIES WITH A 41-POINT NEURAL AD AUTOPSY, REAL-TIME A/B TESTING, AND SURGICAL EDITING TO MAXIMIZE ROI BEFORE YOU SPEND.</p>
+                <div class="btn-container">
+                    <a href="./demo.html" class="btn btn-active">SEE THE WORKFLOW DEMO</a>
+                    <a href="#" class="btn" onclick="return false;">ENTER APP (LOCKED)</a>
+                </div>
+            </div>
+
+            <h2 class="huge-header">THE ULTIMATE<br>AGENCY TOOLKIT.</h2>
+
+            <div class="grid-layout">
+                
+                <!-- Feature 1: Autopsy -->
+                <div class="panel">
+                    <div class="tag">01 / DIAGNOSIS</div>
+                    <h3>AD AUTOPSY ENGINE</h3>
+                    <p>Upload a single ad. Our AutoGluon ensemble analyzes 41 exact metrics (structure, hook density, and A/V sync) to predict win/loss probability with surgical accuracy... and much more!</p>
+                    <div class="mini-result">
+                        <h4>RESULT:</h4>
+                        <p>STATUS: <span style="background: var(--text); color: white; padding: 2px 5px;">LOSER (66%)</span></p>
+                        <p>HOOK CUT DENSITY: 0 (POOR)</p>
+                        <p>VOCAL/MUSIC RATIO: 0.4 (DROWNED)</p>
+                    </div>
+                </div>
+
+                <!-- Feature 2: A/B Testing -->
+                <div class="panel panel-yellow">
+                    <div class="tag">02 / A/B TESTING</div>
+                    <h3>LIVE A/B COMPARISON</h3>
+                    <p>Upload two similar but different ads. Let our neural engine pit them against each other using empirical data so you know exactly which creative to deploy.</p>
+                    <div class="mini-result" style="background: white;">
+                        <h4>RESULT:</h4>
+                        <div class="compare-grid" style="margin-top: 10px;">
+                            <div class="compare-box compare-loser">
+                                <p>VARIANT A</p>
+                                <h2 style="margin: 5px 0;">34% WIN</h2>
+                                <p style="font-size: 0.7rem;">Low Contrast Frame 0</p>
+                            </div>
+                            <div class="compare-box compare-winner">
+                                <p>VARIANT B</p>
+                                <h2 style="margin: 5px 0;">92% WIN</h2>
+                                <p style="font-size: 0.7rem;">High Contrast Frame 0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Editing -->
+                <div class="panel panel-blue">
+                    <div class="tag">03 / SURGICAL EDITING</div>
+                    <h3 style="color: var(--highlight);">GEMINI & OMNI FLASH</h3>
+                    <p>When an ad fails, Gemini 3.1 Flash Lite orchestrates a surgical fix. We trigger Omni Flash to generate high-retention visual edits and flawlessly remux your original audio.</p>
+                    <div class="mini-result" style="background: var(--bg); color: var(--text);">
+                        <h4>RESULT:</h4>
+                        <p>> ORCHESTRATOR: GEMINI 3.1 LITE</p>
+                        <p>> VISUAL REPLACEMENT: OMNI FLASH</p>
+                        <p>> REMUX A/V SYNC: 100% ALIGNED</p>
+                    </div>
+                </div>
+
+                <!-- NEW Feature 4: Multimodal Analysis -->
+                <div class="panel panel-red">
+                    <div class="tag" style="background: var(--highlight); color: var(--text);">04 / NEURAL ANALYSIS</div>
+                    <h3 style="color: var(--highlight);">MULTIMODAL SCRIPT PARSING</h3>
+                    <p>We don't just look at pixels. PlayNoDice rips the audio transcript and cross-references it with visual cues to ensure your CTA isn't getting drowned out by visual noise.</p>
+                    <div class="mini-result" style="background: var(--bg); color: var(--text);">
+                        <h4>RESULT:</h4>
+                        <p>> TRANSCRIPT: EXTRACTED</p>
+                        <p>> CTA VISIBILITY: LOW</p>
+                        <p>> RECOMMENDATION: ADD TEXT OVERLAY</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <h2 class="huge-header" style="color: var(--accent); margin-top: 80px;">THE 41-POINT DATA AUTOPSY.</h2>
+            <p style="font-size: 1.1rem; max-width: 900px; margin-top: 15px;">We don't guess. Our AutoGluon backend rips your video apart frame by frame, extracting 41 distinct computer vision, audio processing, and semantic psychological metrics before issuing a verdict... and much more!</p>
+
+            <!-- METRICS CATEGORY 1 -->
+            <div class="metrics-category">A. COMPUTER VISION & PIXEL MATH</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>FIRST FRAME CONTRAST</h4>
+                    <p>Evaluates visual pop in the very first millisecond.</p>
+                    <div class="how">> MEASURED VIA: OpenCV greyscale histogram analysis on frame 0.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>HOOK CUT DENSITY</h4>
+                    <p>Number of hard cuts in the critical first 3 seconds.</p>
+                    <div class="how">> MEASURED VIA: Shot transition detection indexing via FFmpeg.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>OPTICAL FLOW MEDIAN</h4>
+                    <p>Calculates the average speed and chaotic movement of the video.</p>
+                    <div class="how">> MEASURED VIA: Dense optical flow vectors (Farneback algorithm).</div>
+                </div>
+                <div class="metric-card">
+                    <h4>FIRST FRAME SATURATION</h4>
+                    <p>Measures the vibrance of colors used in the opening frame.</p>
+                    <div class="how">> MEASURED VIA: HSV color space tensor analysis.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>VISUAL CONTEXT RESET RATE</h4>
+                    <p>How frequently the entire scene completely changes.</p>
+                    <div class="how">> MEASURED VIA: Structural Similarity Index (SSIM) delta thresholds.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>OVERALL CUT DENSITY</h4>
+                    <p>The pacing of the ad across its total duration.</p>
+                    <div class="how">> MEASURED VIA: Global shot transition counts / duration.</div>
+                </div>
+            </div>
+
+            <!-- METRICS CATEGORY 2 -->
+            <div class="metrics-category" style="background: var(--primary);">B. AUDIO SIGNAL PROCESSING</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>LOUDNESS LUFS AVG</h4>
+                    <p>Total perceived loudness relative to broadcast standards.</p>
+                    <div class="how">> MEASURED VIA: FFmpeg loudnorm audio filters.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>AUDIO TRANSIENT SPIKES</h4>
+                    <p>Sudden loud impacts (beats, sound effects, claps).</p>
+                    <div class="how">> MEASURED VIA: Percussive onset mapping using Librosa.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>VOCAL-TO-MUSIC RATIO</h4>
+                    <p>Ensures your CTA isn't getting drowned out by the background track.</p>
+                    <div class="how">> MEASURED VIA: AI stem separation comparing vocal vs instrumental frequency bands.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>SPEECH WPM</h4>
+                    <p>The speed of the speaker's delivery.</p>
+                    <div class="how">> MEASURED VIA: Audio extraction, Whisper transcription, and total word count division.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>A/V ASYNCHRONY</h4>
+                    <p>How disconnected the visual cuts are from the music beats.</p>
+                    <div class="how">> MEASURED VIA: Cross-referencing visual cut timestamps against audio transient spikes.</div>
+                </div>
+            </div>
+
+            <!-- METRICS CATEGORY 3 -->
+            <div class="metrics-category" style="background: var(--accent);">C. PSYCHOLOGICAL SEMANTICS</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>HOOK ANGLE</h4>
+                    <p>Identifies the psychological opening trigger.</p>
+                    <div class="how">> MEASURED VIA: Gemini 3.1 Flash Lite multimodal classification (e.g. Curiosity vs Negative Hook).</div>
+                </div>
+                <div class="metric-card">
+                    <h4>SCRIPT FRAMEWORK</h4>
+                    <p>Maps the ad to proven direct-response frameworks.</p>
+                    <div class="how">> MEASURED VIA: LLM analysis mapping to PAS, AIDA, or Problem-Solution.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>CTA DWELL TIME</h4>
+                    <p>How long the Call to Action remains on screen.</p>
+                    <div class="how">> MEASURED VIA: Visual bounding box tracking and OCR text extraction.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>PRESENTER TYPE</h4>
+                    <p>Determines the trust factor of the speaker.</p>
+                    <div class="how">> MEASURED VIA: LLM visual parsing (UGC, Brand, Faceless, Expert).</div>
+                </div>
+                <div class="metric-card">
+                    <h4>FIRST VISUAL PROOF</h4>
+                    <p>Time elapsed before the product is shown working.</p>
+                    <div class="how">> MEASURED VIA: Millisecond timestamp extraction of the product demonstration trigger.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>PROXEMIC URGENCY INDEX</h4>
+                    <p>Perceived psychological closeness and urgency of the speaker.</p>
+                    <div class="how">> MEASURED VIA: Facial proximity bounding boxes combined with tone-of-voice classification.</div>
+                </div>
+                <div class="metric-card">
+                    <h4>VIBE AESTHETIC</h4>
+                    <p>Overall visual mood and quality rating.</p>
+                    <div class="how">> MEASURED VIA: Holistic multimodal embedding space classification.</div>
+                </div>
+            </div>
+
+            <h2 class="huge-header" style="color: var(--text); border-bottom: none; font-size: 4rem; text-align: center; margin-top: 60px;">...AND MUCH MORE!</h2>
+
+            <h2 class="huge-header" style="color: var(--primary); margin-top: 100px;">ROAS. OPTIMIZED.<br>AUTOMATICALLY.</h2>
+            
+            <div class="panel" style="margin-top: 40px; padding: 40px; text-align: center; background: var(--text); color: var(--bg);">
+                <h3 style="font-size: 2rem; color: var(--highlight);">STOP BURNING YOUR CLIENT'S MONEY.</h3>
+                <p style="font-size: 1.1rem; max-width: 600px; margin: 15px auto;">Agencies using PlayNoDice are mathematically inclined to see greater ROAS by surgically filtering out losing creatives before they ever hit the ad network.</p>
+                <a href="./demo.html" class="btn btn-active" style="margin-top: 25px; border-color: var(--bg);">SEE THE DEMO</a>
+            </div>
+
+            <div style="margin-top: 80px; margin-bottom: 40px; padding: 60px 40px; background: var(--highlight); border: var(--border); text-align: center; color: var(--text); box-shadow: 10px 10px 0px 0px var(--text);">
+                <h2 style="font-size: 4rem; margin-bottom: 20px; line-height: 1.1;">ROADMAP: SCALING TO 100,000 VIDEOS.</h2>
+                <p style="font-size: 1.5rem; max-width: 1000px; margin: 0 auto; font-weight: 900; letter-spacing: -0.5px;">OUR AUTOGLUON MODEL IS SOON GOING TO BE TRAINED ON 100K REAL AD VIDEOS, BENCHMARKING THOSE EXACT 41 METRICS AGAINST TRUE ROAS OUTCOMES TO ACHIEVE PERFECT PREDICTIVE ACCURACY.</p>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>© 2026 PLAYNODICE. AUTOPSY. TEST. PROFIT.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
+
